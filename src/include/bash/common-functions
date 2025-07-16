@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+function __log() {
+    local severity=${1:?Need severity}
+    shift
+    echo $(date '+%Y%m%dT%H%M%S') $(basename "${0}") [${severity}] "${@:-}" >/dev/stderr
+}
+
+function log() {
+    local severity=${1:?Need severity}
+    shift
+    if [[ -n "${@:-}" ]]; then
+        (set -o noglob; __log "${severity}" "${@}")
+    else
+        while read line; do
+            (set -o noglob; __log "${severity}" ${line})
+        done
+    fi
+}
+
+function debug() {
+    (set -o noglob; log DEBUG "${@:-}")
+}
+
+function error() {
+    (set -o noglob; log ERROR "${@:-}")
+    exit ${EXIT_CODE:-1}
+}
+
+function ignore() {
+    (set -o noglob; log IGNORE "${@:-}")
+}
+
+function info() {
+    (set -o noglob; log INFO "${@:-}")
+}
+
+function is_false() {
+    ! is_true "${@}"
+}
+
+function is_true() {
+    if [[ "${#@}" = "0" ]]; then cat /dev/stdin | head -n 1; else echo "${1}"; fi | grep -E -i -q '^\s*(1|true|t|yes|y)\s*$' >/dev/null 2>&1
+}
+
+function tolower() {
+    # FIXME: support unicode
+    tr '[A-Z]' '[a-z]'
+}
+
+function toupper() {
+    # FIXME: support unicode
+    tr '[a-z]' '[A-Z]'
+}
+
+function warn() {
+    (set -o noglob; log WARN "${@:-}")
+}
+
+function warning() {
+    (set -o noglob; warn "${@:-}")
+}
+
