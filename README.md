@@ -29,3 +29,6 @@ COPY --chmod=755 ./src/script /usr/local/bin/
 ENTRYPOINT [ "/usr/local/bin/script" ]
 ```
 
+## Building
+
+1. `docker buildx build --platform linux/amd64,linux/arm64 -t 1121citrus/ha-bash-base:latest -t 1121citrus/ha-bash-base:x.y.z --push .`
