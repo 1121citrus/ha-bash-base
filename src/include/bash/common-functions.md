@@ -1,5 +1,43 @@
 # Common Bash Functions
 
+
+#### Contents
+  - [Usage](#usage)
+  - [Functions](#functions)
+      - [debug()](#debug)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into debug](#piping-messages-into-debug)
+      - [error()](#error)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into error](#piping-messages-into-error)
+      - [ignore()](#ignore)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into ignore](#piping-messages-into-ignore)
+      - [info()](#info)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into info](#piping-messages-into-info)
+      - [is_false()](#is-false)
+        - [Usage](#usage)
+      - [is_true()](#is-true)
+        - [Usage](#usage)
+      - [log()](#log)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into the logger](#piping-messages-into-the-logger)
+      - [tolower()](#tolower)
+        - [Usage](#usage)
+      - [toupper()](#toupper)
+        - [Usage](#usage)
+      - [warn()](#warn)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into info](#piping-messages-into-info)
+      - [warning()](#warning)
+
 ## Usage
 
 ```bash
