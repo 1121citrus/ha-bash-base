@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Common bash functions for logging
+
+# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+function debug() {
+    (set -o noglob; log DEBUG "${@:-}")
+}
+
+function dryrun() {
+    (set -o noglob; log DRYRUN "${@:-}")
+}
+
+function error() {
+    (set -o noglob; log ERROR "${@:-}")
+    exit ${EXIT_CODE:-1}
+}
+
+function ignore() {
+    (set -o noglob; log IGNORE "${@:-}")
+}
+
+function info() {
+    (set -o noglob; log INFO "${@:-}")
+}
+
+function log() {
+    local severity=${1:?Need severity}
+    shift
+    if [[ -n "${@:-}" ]]; then
+        (set -o noglob; __ha_bash_base__log "${severity}" "${@}")
+    else
+        while read line; do
+            (set -o noglob; __ha_bash_base__log "${severity}" ${line})
+        done
+    fi | tee >(log-to-logfile)
+}
+
+function log-to-logfile() {
+    if [[ -n "${TASK_LOGFILE:-}" ]]; then
+        local logdate=$(date -u +%Y%m%dT%H%M%S)
+        local rid=
+        [[ -n "${REQUESTID:-}" ]] && rid="${REQUESTID} ${logdate} "
+        if [[ -n ${1+x} ]]; then echo "$@"; else cat -; fi | while read line ; do
+            echo "${rid}${line}" >> "${TASK_LOGFILE}"
+        done
+    fi
+}
+
+function warn() {
+    (set -o noglob; log WARN "${@:-}")
+}
+
+function warning() {
+    (set -o noglob; warn "${@:-}")
+}
+
+function __ha_bash_base__log() {
+    local severity=${1:?Need severity}
+    shift
+    echo $(date '+%Y%m%dT%H%M%S') $(basename "${0}") [${severity}] "${@:-}" >/dev/stderr
+}
+

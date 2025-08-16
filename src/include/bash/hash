@@ -16,11 +16,34 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__BASH_FUNCTION_DIR=$(dirname $(readlink -f "${BASH_SOURCE}"))
+function md5() {
+    md5sum | awk '{print $1}'
+}
 
-source "${__BASH_FUNCTION_DIR}/date"
-source "${__BASH_FUNCTION_DIR}/logging"
-source "${__BASH_FUNCTION_DIR}/hash"
-source "${__BASH_FUNCTION_DIR}/text"
+function sha1() {
+    shasum -a1 | awk '{print $1}'
+}
 
-unset __BASH_FUNCTION_DIR
+function sha224() {
+    shasum -a224 | awk '{print $1}'
+}
+
+function sha256() {
+    shasum -a256 | awk '{print $1}'
+}
+
+function sha384() {
+    shasum -a384 | awk '{print $1}'
+}
+
+function sha512() {
+    shasum -a512 | awk '{print $1}'
+}
+
+function sha512-224() {
+    shasum -a512224 | awk '{print $1}'
+}
+
+function sha512-256() {
+    shasum -a512256 | awk '{print $1}'
+}

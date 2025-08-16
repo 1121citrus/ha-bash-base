@@ -8,6 +8,10 @@
         - [Usage](#usage)
         - [Passing a log message argument](#passing-a-log-message-argument)
         - [Piping messages into debug](#piping-messages-into-debug)
+      - [dryrun()](#dryrun)
+        - [Usage](#usage)
+        - [Passing a log message argument](#passing-a-log-message-argument)
+        - [Piping messages into debug](#piping-messages-into-dryrun)
       - [error()](#error)
         - [Usage](#usage)
         - [Passing a log message argument](#passing-a-log-message-argument)
@@ -17,31 +21,23 @@
         - [Passing a log message argument](#passing-a-log-message-argument)
         - [Piping messages into ignore](#piping-messages-into-ignore)
       - [info()](#info)
-        - [Usage](#usage)
-        - [Passing a log message argument](#passing-a-log-message-argument)
-        - [Piping messages into info](#piping-messages-into-info)
-      - [is_false()](#is-false)
-        - [Usage](#usage)
-      - [is_true()](#is-true)
-        - [Usage](#usage)
+         - [Usage](#usage)
+         - [Passing a log message argument](#passing-a-log-message-argument)
+         - [Piping messages into info](#piping-messages-into-info)
       - [log()](#log)
-        - [Usage](#usage)
-        - [Passing a log message argument](#passing-a-log-message-argument)
-        - [Piping messages into the logger](#piping-messages-into-the-logger)
-      - [tolower()](#tolower)
-        - [Usage](#usage)
-      - [toupper()](#toupper)
-        - [Usage](#usage)
+         - [Usage](#usage)
+         - [Passing a log message argument](#passing-a-log-message-argument)
+         - [Piping messages into the logger](#piping-messages-into-the-logger)
       - [warn()](#warn)
-        - [Usage](#usage)
-        - [Passing a log message argument](#passing-a-log-message-argument)
-        - [Piping messages into info](#piping-messages-into-info)
+         - [Usage](#usage)
+         - [Passing a log message argument](#passing-a-log-message-argument)
+         - [Piping messages into info](#piping-messages-into-info)
       - [warning()](#warning)
 
 ## Usage
 
 ```bash
-source "${COMMON_FUNCTIONS_FILE:-/usr/local/include/bash/common-functions}"
+source "${LOGGING_FUNCTIONS_FILE:-/usr/local/include/bash/logging}"
 ```
 
 ## Functions
@@ -88,6 +84,50 @@ produces output like:
 ```
 20250728T041501 my-script [DEBUG] export FOO=foo
 20250728T041501 my-script [DEBUG] export BAR=bar
+```
+
+#### dryrun()
+
+Shorthand for:
+
+```bash
+log DRYRUN a dryrun message
+```
+
+##### Usage
+
+##### Passing a log message argument
+
+Within `my-script`
+
+```bash
+dryrun a dryrun message
+```
+
+produces output like:
+
+```
+20250728T041501 my-script [DRYRUN] a dryrun message
+```
+
+##### Piping messages into dryrun
+
+Given a file `messages`:
+
+```
+export FOO=foo
+export BAR=bar
+```
+
+```bash
+cat messages | dryrun
+```
+
+produces output like:
+
+```
+20250728T041501 my-script [DRYRUN] export FOO=foo
+20250728T041501 my-script [DRYRUN] export BAR=bar
 ```
 
 #### error()
@@ -229,35 +269,6 @@ produces output like:
 ```
 
 
-#### is_false()
-
-Shorthand for `! is_true arg`
-
-##### Usage
-
-```bash
-is_false "${ARGUMENT}"
-is_false yes        # returns 1
-is_false napkins    # returns 0
-```
-
-returns exit code 0 if the argument is not true and 1 otherwise. See is_true().
-
-
-#### is_true()
-
-Returns true is the argument is one of `1`, `true`, `t`, `yes` or `y`. The comparison is case insensitive.
-
-##### Usage
-
-```bash
-is_true yes        # returns 0
-is_true napkins    # returns 1
-```
-
-returns exit code 0 if the argument is true and 1 otherwise. See is_false().
-
-
 #### log()
 
 Formats and writes a log message.
@@ -298,39 +309,6 @@ produces output like:
 20250728T041501 my-script [SEVERE] Wake up! A really big problem has occurred!
 20250728T041501 my-script [SEVERE] There is a gas leak!
 20250728T041501 my-script [SEVERE] The house is on fire!
-```
-
-#### tolower()
-
-Converts `stdin` to lower case and writes to `stdout`.
-
-##### Usage
-
-```bash
-echo UPPERCASE | tolower
-```
-
-produces output:
-
-```
-uppercase
-```
-
-
-#### toupper()
-
-Converts `stdin` to upper case and writes to `stdout`.
-
-##### Usage
-
-```bash
-echo lowercase | tolower
-```
-
-produces output:
-
-```
-LOWERCASE
 ```
 
 #### warn()

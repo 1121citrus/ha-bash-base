@@ -16,11 +16,37 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__BASH_FUNCTION_DIR=$(dirname $(readlink -f "${BASH_SOURCE}"))
+function current-month() {
+    date "+%m"
+}
 
-source "${__BASH_FUNCTION_DIR}/date"
-source "${__BASH_FUNCTION_DIR}/logging"
-source "${__BASH_FUNCTION_DIR}/hash"
-source "${__BASH_FUNCTION_DIR}/text"
+function current-year() {
+    date "+%Y"
+}
 
-unset __BASH_FUNCTION_DIR
+function day-in-year() {
+    php -r 'date_default_timezone_set("UTC"); $a = date("z", time()); echo $a;'
+}
+
+function day-of-month() {
+    date "+%d"
+}
+
+function today() {
+    date "+%Y-%m-%d"
+}
+
+function tomorrow() {
+    date "+%Y-%m-%d" --date=tomorrow
+}
+
+function yesterday() {
+    date "+%Y-%m-%d" --date=yesterday
+}
+
+# function ytd-dates() {
+#     for f in $(seq 1 $(day-in-year) | tail -r); do
+#         eval "date -v-${f}d '+%Y-%m-%d'"
+#     done
+# }
+

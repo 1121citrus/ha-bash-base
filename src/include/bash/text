@@ -1,0 +1,187 @@
+#!/usr/bin/env bash
+
+# Common bash functions.
+# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+function append() {
+    (
+        set -o noglob
+        local text="${@}"
+        while read f; do
+            echo ${f}${text}
+        done
+    )
+}
+
+function commify() {
+    local ret=
+    while read f; do
+        ret="$ret,$f"
+    done
+    echo -n ${ret/,/}
+}
+
+function commaspacify() {
+    commify | sed 's/,/, /g'
+}
+
+function csvify () { 
+    perl -ne 'chop;s/\cI/","/g; print qq{\"$_\"\n};'
+}
+
+function csvify-noquotes () { 
+    perl -ne 'chop;s/\cI/,/g; print qq{$_\n};'
+}
+
+function double-quote() { 
+    while read f; do 
+       echo \"${f//\"/\"\\\"\"}\"
+    done
+}
+
+function is-false() {
+    (set -o noglob; ! is-true "${@}")
+}
+
+function is_false() {
+    (set -o noglob; is-false "${@}")
+}
+
+function is-number() {
+    if [[ "${#@}" = "0" ]]; then
+        cat /dev/stdin | head -n 1
+    else
+        echo "${1}"
+    fi | perl -ne 'if (/^\d+$/) { print  } else { exit 1 }'
+}
+	
+function is-true() {
+    if [[ "${#@}" = "0" ]]; then
+        cat /dev/stdin | head -n 1
+    else
+        echo "${1}"
+    fi | grep -E -i -q '^\s*(1|true|t|yes|y)\s*$' >/dev/null 2>&1
+}
+
+function is_true() {
+    (set -o noglob; is-true "${@}")
+}
+
+function lineify() { 
+    while read f; do
+        for ff in ${f}; do
+            echo "$ff"
+        done
+    done
+}
+
+function max-length() {
+    perl -ne 'BEGIN{$L=0} chop; $l = length $_; if ( $l > $L ) { $L = $l;}  END{print qq{$L\n}}';
+}
+
+function not-blank() {
+    perl -ne 'print if /\S+/'
+}
+
+function not-number() {
+   perl -ne 'print unless /^\d+$/'
+}
+
+function pipeify() { 
+    local ret=
+    while read f; do
+        ret="$ret|$f"
+    done
+    echo -n ${ret/|/}
+}
+
+function prepend() {
+    (
+        set -o noglob
+        local text="${@}"
+        while read line; do
+            echo ${text}${line}
+        done
+    )
+}
+
+function prettycommify() {
+    commaspacify | rev | sed 's/ ,/ dna /' | rev
+}
+
+function quote() { 
+    while read f; do 
+       echo \'${f//\'/\'\\\'\'}\'
+    done
+}
+
+function remove-quote() { 
+    perl -pne "s/\'//g"
+}
+
+function remove-quotes() { 
+    perl -pne 's/\"//g'
+}
+
+function spacify() {
+    local ret=
+    while read f; do
+        ret="$ret $f"
+    done
+    echo -n ${ret/ /}
+}
+
+function strip-hash() {
+    perl -pne 's/(^\w{32}).*/$1/';
+}
+
+function strip-quote() {
+    perl -ne 'print if s/\042|\047//g';
+}
+
+function to-arrays() {
+    local count=${1:-50}
+    local dir="/tmp/${TASK}.$$.${RANDOM}"
+    (
+        trap 's=$?; rm -rf "${dir}"; exit $s' EXIT
+        mkdir "${dir}"
+        builtin cd "${dir}"
+        split -l "${count}"
+        for f in $(ls | grep ^x |sort); do
+            cat "${f}"
+            echo
+        done
+    )
+}
+
+function to-lower() {
+    # FIXME: support unicode
+    tr '[A-Z]' '[a-z]'
+}
+
+function tolower() {
+    to-lower
+}
+
+function to-upper() {
+    # FIXME: support unicode
+    tr '[a-z]' '[A-Z]'
+}
+
+function toupper() {
+    to-upper
+}
+

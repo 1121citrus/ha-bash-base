@@ -1,7 +1,6 @@
 # 1121citrus/ha-bash-base
 
-## Contents
-- [1121citrus/ha-bash-base](#1121citrushome-assistantbash-base)
+#### Contents
   - [Synopsis](#synopsis)
   - [Overview](#overview)
   - [Example](#example)
@@ -14,7 +13,7 @@ An application specific service base image for simple bash-forward services.
 Recipe:
 
 - Start with [stock bash image](https://hub.docker.com/_/bash/)
-- Add selected bash include files to `/usr/local/include/bash`
+- Add selected bash include files to `/usr/local/1121citrus/include/bash`
 - Add selected applications
 
 ## Example

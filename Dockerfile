@@ -21,24 +21,29 @@ ARG BASH_VERSION=5.3.0
 
 FROM bash:${BASH_VERSION}-alpine${ALPINE_VERSION}
 
-RUN APK_PACKAGES="aws-cli"  \
-    && echo [INFO] start installing bash-base \
+ENV DEBIAN_FRONTEND=noninteractive
+
+ENV __HA_BASE_BASH_DIR=/usr/local/1121citrus/include/bash
+
+RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php" \
+    && set -eux \
+    && echo [INFO] start installing ha-bash-base \
     && echo [INFO] installing apk packages: ${APK_PACKAGES} \
     && apk update \
     && apk add --no-cache ${APK_PACKAGES} \
     && echo [INFO] completed installing apk packages ... \
-    && mkdir -pv /usr/local/include/bash \
+    && mkdir -pv ${__HA_BASE_BASH_DIR} \
+	&& ln -b -s ${__HA_BASE_BASH_DIR}/common-functions /etc/profile.d/1121citrus.sh \
     && echo [INFO] completed installing 1121citrus \
     && true
 
 # Install Docker binary -- borrow it from Official Docker container
 COPY --from=docker:latest --chmod=755 ./usr/local/bin/docker /usr/local/bin/docker
 
-# Install common cruft
-COPY --chmod=644 ./src/include/bash/common-functions /usr/local/include/bash/common-functions
+# Install common functions
+COPY --chmod=755 ./src/include/bash/* ${__HA_BASE_BASH_DIR}
 
+ENV BASH_ENV=/etc/profile
 WORKDIR /
 ENTRYPOINT [ "/usr/bin/env", "bash", "-c" ]
-CMD [ "/usr/bin/env", "bash", "-c" ]
-
 
