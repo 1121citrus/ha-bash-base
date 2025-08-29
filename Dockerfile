@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
-# Yet another version of `rotate-backups` but this time applied to an AWS S3 backup archive bucket.
-# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+# An application specific service base image for simple bash-forward services.
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,24 +16,30 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-ARG ALPINE_VERSION=3.22
-ARG BASH_VERSION=5.3.0
+FROM bash:latest
 
-FROM bash:${BASH_VERSION}-alpine${ALPINE_VERSION}
-
+ENV __1121CITRUS_BASE_DIR=/usr/local/1121citrus
+ENV __1121CITRUS_BIN_DIR=${__1121CITRUS_BASE_DIR}/bin
+ENV __1121CITRUS_INCLUDE_BASH_DIR=${__1121CITRUS_BASE_DIR}/include/bash
+ENV BASH=/usr/local/bin/bash
 ENV DEBIAN_FRONTEND=noninteractive
 
-ENV __HA_BASE_BASH_DIR=/usr/local/1121citrus/include/bash
-
-RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php" \
-    && set -eux \
+RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php python3 py3-pip" \
+    && set -Eeux -o pipefail \
     && echo [INFO] start installing ha-bash-base \
     && echo [INFO] installing apk packages: ${APK_PACKAGES} \
     && apk update \
     && apk add --no-cache ${APK_PACKAGES} \
     && echo [INFO] completed installing apk packages ... \
-    && mkdir -pv ${__HA_BASE_BASH_DIR} \
-	&& ln -b -s ${__HA_BASE_BASH_DIR}/common-functions /etc/profile.d/1121citrus.sh \
+    && echo [INFO] make our bash the default shell \
+    && ln --symbolic --force --verbose /usr/local/bin/bash /bin/bash \
+    && ln --symbolic --force --verbose /usr/local/bin/bash /bin/sh \
+    && echo [INFO] create 1121citrus file structure \
+    && mkdir --parents --verbose ${__1121CITRUS_INCLUDE_BASH_DIR} \
+    && mkdir --parents --verbose ${__1121CITRUS_BIN_DIR} \
+    && echo [INFO] link 1121citrus initialization script into /etc/profile \
+    && ln --symbolic --force --verbose  ${__1121CITRUS_INCLUDE_BASH_DIR}/dot-bashrc /etc/profile.d/1121citrus.sh \
+    && ln --symbolic --force --verbose  ${__1121CITRUS_INCLUDE_BASH_DIR}/dot-bashrc /root/.bashrc \
     && echo [INFO] completed installing 1121citrus \
     && true
 
@@ -41,9 +47,9 @@ RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php" \
 COPY --from=docker:latest --chmod=755 ./usr/local/bin/docker /usr/local/bin/docker
 
 # Install common functions
-COPY --chmod=755 ./src/include/bash/* ${__HA_BASE_BASH_DIR}
+COPY --chmod=755 ./src/include/bash/* ${__1121CITRUS_INCLUDE_BASH_DIR}
+COPY --chmod=755 ./src/bin/* ${__1121CITRUS_BIN_DIR}
 
 ENV BASH_ENV=/etc/profile
 WORKDIR /
-ENTRYPOINT [ "/usr/bin/env", "bash", "-c" ]
 

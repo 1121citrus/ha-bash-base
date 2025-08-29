@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Common bash functions.
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -eu
+# set -xv
+
+function run() {
+    docker run -i --rm 1121citrus/ha-bash-base:latest "${@}"
+}
+
+status=0
+
+
+#### debug()
+
+{ [[ $(echo message | run debug 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3])([0-5][0-9]){2}\ log\ \[DEBUG\]\ message ]] && echo debug succeeded; } || { echo debug failed; status=1; }
+
+
+#### dryrun()
+
+{ [[ $(echo message | run dryrun 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[DRYRUN\]\ message ]] && echo dryrun succeeded; } || { echo dryrun failed; status=1; }
+
+
+#### error()
+
+{ [[ $(echo message | run error 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[ERROR\]\ message ]] && echo error succeeded; } || { echo error failed; status=1; }
+
+
+#### ignore()
+
+{ [[ $(echo message | run ignore 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[IGNORE\]\ message ]] && echo ignore succeeded; } || { echo ignore failed; status=1; }
+
+
+#### info()
+
+{ [[ $(echo message | run info 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[INFO\]\ message ]] && echo info succeeded; } || { echo info failed; status=1; }
+
+
+#### warn()
+
+{ [[ $(echo message | run warn 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[WARN\]\ message ]] && echo warn succeeded; } || { echo warn failed; status=1; }
+
+
+#### warning()
+
+{ [[ $(echo message | run warning 2>&1) =~ 2[0-9]{3}(0[1-9]|1[0,1,2])(0[1-9]|[12][0-9]|3[01])T(0[1-9]|1[0-9]|2[0-3])(0[1-9]|[1-5][0-9]){2}\ log\ \[WARN\]\ message ]] && echo warning succeeded; } || { echo warning failed; status=1; }
+
+
+exit $status
+
+

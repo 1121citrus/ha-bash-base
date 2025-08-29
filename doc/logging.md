@@ -1,9 +1,8 @@
-# Common Bash Functions
-
+# Logging
 
 #### Contents
   - [Usage](#usage)
-  - [Functions](#functions)
+  - [Commands](#commands)
       - [debug()](#debug)
         - [Usage](#usage)
         - [Passing a log message argument](#passing-a-log-message-argument)
@@ -37,10 +36,10 @@
 ## Usage
 
 ```bash
-source "${LOGGING_FUNCTIONS_FILE:-/usr/local/include/bash/logging}"
+pathprepend /usr/local/1121citrus/bin
 ```
 
-## Functions
+## Commands
 
 #### debug()
 

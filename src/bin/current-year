@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# Common bash functions.
-# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,37 +15,5 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function current-month() {
-    date "+%m"
-}
-
-function current-year() {
-    date "+%Y"
-}
-
-function day-in-year() {
-    php -r 'date_default_timezone_set("UTC"); $a = date("z", time()); echo $a;'
-}
-
-function day-of-month() {
-    date "+%d"
-}
-
-function today() {
-    date "+%Y-%m-%d"
-}
-
-function tomorrow() {
-    date "+%Y-%m-%d" --date=tomorrow
-}
-
-function yesterday() {
-    date "+%Y-%m-%d" --date=yesterday
-}
-
-# function ytd-dates() {
-#     for f in $(seq 1 $(day-in-year) | tail -r); do
-#         eval "date -v-${f}d '+%Y-%m-%d'"
-#     done
-# }
+date "+%Y"
 

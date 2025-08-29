@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Common bash functions.
-# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -17,9 +17,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 set -eu
+# set -xv
 
 function run() {
-    docker run -i --rm 1121citrus/ha-bash-base:1.1.0 "${@}"
+    docker run -i --rm 1121citrus/ha-bash-base:${TAG:-latest} "${@}"
 }
 
 status=0
@@ -27,37 +28,37 @@ status=0
 #### current-month()
 # Returns the current month as a 2 digit (leading zero) integer.
 
-[[ $(run current-month) == $(date +%m) ]] || { echo current-month failed; status=1; }
+([[ $(run current-month) == $(date +%m) ]] && echo current-month succeeded) || { echo current-month failed; status=1; }
 
 
 #### current-year()
 # Returns the current year as a 4 digit integer.
 
-[[ $(run current-year) == $(date +%Y) ]] || { echo current-year failed; status=1; }
+([[ $(run current-year) == $(date +%Y) ]]  && echo current-year succeeded) || { echo current-year failed; status=1; }
 
 
 #### day-of-month()
 # Returns the date in the current month as a 2 digit (leading zero) integer.
 
-[[ $(run day-of-month) == $(date +%d) ]] || { echo day-of-month failed; status=1; }
+([[ $(run day-of-month) == $(date +%d) ]] && echo day-of-month succeeded) || { echo day-of-month failed; status=1; }
 
 
 #### today()
 # Returns the date in YYYY-MM-DD format.
 
-[[ $(run today) == $(date +%Y-%m-%d) ]] || { echo today failed; status=1; }
+([[ $(run today) == $(date +%Y-%m-%d) ]] && echo today succeeded) || { echo today failed; status=1; }
 
 
 #### tomorrow()
 # Returns the tomorrow's date in YYYY-MM-DD format.
 
-[[ $(run tomorrow) == $(date -d tomorrow +%Y-%m-%d) ]] || { echo tomorrow failed; status=1; }
+([[ $(run tomorrow) == $(date -d tomorrow +%Y-%m-%d) ]] && echo tomorrow succeeded) || { echo tomorrow failed; status=1; }
 
 
 #### yesterday()
 # Returns the yesterday's date in YYYY-MM-DD format.
 
-[[ $(run yesterday) == $(date -d yesterday +%Y-%m-%d) ]] || { echo yesterday failed; status=1; }
+([[ $(run yesterday) == $(date -d yesterday +%Y-%m-%d) ]] && echo current-month succeeded) || { echo yesterday failed; status=1; }
 
 
 exit $status

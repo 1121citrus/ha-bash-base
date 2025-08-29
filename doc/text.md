@@ -1,9 +1,9 @@
-# Text Manipulation Functions
+# Text Manipulation
 
 
 #### Contents
   - [Usage](#usage)
-  - [Functions](#functions)
+  - [Commands](#commands)
       - [append()](#append)
         - [Usage](#usage)
       - [commify()](#commify)
@@ -40,10 +40,10 @@
 ## Usage
 
 ```
-source "${TEXT_FUNCTIONS_FILE:-/usr/local/include/bash/text-functions}"
+pathprepend /usr/local/1121citrus/bin
 ```
 
-## Functions
+## Commands
 
 #### append()
 

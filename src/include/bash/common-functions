@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Common bash functions.
-# Copyright (C) 2005 James Hanlon [mailto:jim@hanlonsoftware.com]
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__BASH_FUNCTION_DIR=$(dirname $(readlink -f "${BASH_SOURCE}"))
+BASH_FUNCTION_DIR=${BASH_FUNCTION_DIR:-$(dirname $(readlink -f "${BASH_SOURCE}"))}
 
-source "${__BASH_FUNCTION_DIR}/date"
-source "${__BASH_FUNCTION_DIR}/logging"
-source "${__BASH_FUNCTION_DIR}/hash"
-source "${__BASH_FUNCTION_DIR}/text"
-
-unset __BASH_FUNCTION_DIR
+source "${BASH_FUNCTION_DIR}/path"
+source "${BASH_FUNCTION_DIR}/text"

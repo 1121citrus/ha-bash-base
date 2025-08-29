@@ -1,8 +1,8 @@
-# Date and Time Functions
+# Date and Time
 
 #### Contents
   - [Usage](#usage)
-  - [Functions](#functions)
+  - [Commands](#commands)
       - [current-month()](#current-month)
         - [Usage](#usage)
       - [current-year()](#current-year)
@@ -19,10 +19,10 @@
 ## Usage
 
 ```bash
-source "${LOGGING_FUNCTIONS_FILE:-/usr/local/include/bash/date}"
+pathprepend /usr/local/1121citrus/bin
 ```
 
-## Functions
+## Commands
 
 #### current-month()
 

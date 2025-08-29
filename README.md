@@ -6,6 +6,7 @@
   - [Example](#example)
 
 ## Synopsis
+
 An application specific service base image for simple bash-forward services.
 
 ## Overview
@@ -15,6 +16,10 @@ Recipe:
 - Start with [stock bash image](https://hub.docker.com/_/bash/)
 - Add selected bash include files to `/usr/local/1121citrus/include/bash`
 - Add selected applications
+
+## Commands and Bash Functions Added
+
+- [Commands](doc/README.md)
 
 ## Example
 
@@ -30,4 +35,4 @@ ENTRYPOINT [ "/usr/local/bin/script" ]
 
 ## Building
 
-1. `docker buildx build --platform linux/amd64,linux/arm64 -t 1121citrus/ha-bash-base:latest -t 1121citrus/ha-bash-base:x.y.z --push .`
+1. `docker buildx build --sbom=true --provenance=true --provenance=mode=max --platform linux/amd64,linux/arm64 -t 1121citrus/ha-bash-base:latest -t 1121citrus/ha-bash-base:x.y.z --push .`

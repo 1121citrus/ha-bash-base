@@ -1,10 +1,10 @@
-# Message Digest (message digest) Functions
+# Hashing (message digest)
 
 The SHA hashes are computed as described in [FIPS PUB 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf)
 
 #### Contents
   - [Usage](#usage)
-  - [Functions](#functions)
+  - [Commands](#commands)
       - [md5()](#md5)
         - [Usage](#usage)
       - [sha1()](#sha1)
@@ -24,11 +24,11 @@ The SHA hashes are computed as described in [FIPS PUB 180-4](https://nvlpubs.nis
 
 ## Usage
 
-```
-source "${LOGGING_FUNCTIONS_FILE:-/usr/local/include/bash/hash}"
+```bash
+pathprepend /usr/local/1121citrus/bin
 ```
 
-## Functions
+## Commands
 
 #### md5()
 

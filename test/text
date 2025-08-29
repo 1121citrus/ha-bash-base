@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+# Common bash functions.
+# Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -eu
+
+function run() {
+    docker run -i --rm 1121citrus/ha-bash-base:${TAG:-latest} "${@}"
+}
+
+status=0
+
+
+#### append()
+# Appends its arguments to each line of input.
+
+( [[ $(echo interesting data | run append ' # Interesting!') == "interesting data # Interesting!" ]] && echo append succeeded) || { echo append failed; status=1; }
+
+
+#### commify()
+# Collapses the input into a comma separated string.
+
+( [[ $(seq 1 10 | run commify) == "1,2,3,4,5,6,7,8,9,10" ]] && echo commify succeeded) || { echo commify failed; status=1; }
+
+
+#### commaspacify()
+# Collapses the input into a comma-space separated string.
+
+( [[ $(seq 1 10 | run commaspacify) == "1, 2, 3, 4, 5, 6, 7, 8, 9, 10" ]] && echo commaspacify succeeded) || { echo commaspacify failed; status=1; }
+
+
+#### double-quote()
+# Surrounds input lines with ASCII double quote character.
+
+( (( $(seq 1 10 | run double-quote | wc -l) == 10 )) && echo double-quote succeeded) || { echo double-quote failed; status=1; }
+( (( $(seq 1 10 | run double-quote | egrep '^"([1-9]|10)"$' | wc -l) == 10 )) && echo double-quote succeeded) || { echo double-quote failed; status=1; }
+
+
+#### is-false()
+
+( (( $(echo yes | run is-false ; echo $?) == 1 )) && echo is-false succeeded) || { echo is-false failed; status=1; }
+( (( $(echo napkins | run is-false ; echo $?) == 0 )) && echo is-false succeeded) || { echo is-false failed; status=1; }
+
+
+#### is_false()
+
+( (( $(echo yes | run is_false ; echo $?) == 1 )) && echo is_false succeeded) || { echo is_false failed; status=1; }
+( (( $(echo napkins | run is_false ; echo $?) == 0 )) && echo is_false succeeded) || { echo is_false failed; status=1; }
+
+
+#### is-number()
+# If the argument is decimal string then it is written to standard output and returns true,
+# otherwise the input is discarded and the function returns false.
+
+( (( $(echo 10 | run is-number) == 10 )) && echo is-number succeeded) || { echo is-number failed; status=1; }
+( (( $(echo 10 | run is-number >/dev/null ; echo $?) == 0 )) && echo is-number succeeded) || { echo is-number failed; status=1; }
+( [[ -z "$(echo napkins | run is-number)" ]] && echo is-number succeeded) || { echo is-number failed; status=1; }
+( (( $(echo napkins | run is-number ; echo $?) == 1 )) && echo is-number succeeded) || { echo is-number failed; status=1; }
+
+
+#### is-true()
+# Returns true if the argument is one of `1`, `true`, `t`, `yes` or `y`. The comparison is case insensitive.
+
+( (( $(echo yes | run is-true ; echo $?) == 0 )) && echo is-true succeeded) || { echo is-true failed; status=1; }
+( [[ -z "$(echo yes | run is-true)" ]] && echo is-true succeeded) || { echo is-true failed; status=1; }
+( (( $(echo napkins | run is-true ; echo $?) == 1 )) && echo is-true succeeded) || { echo is-true failed; status=1; }
+( [[ -z "$(echo napkins | run is-true)" ]] && echo is-true succeeded) || { echo is-true failed; status=1; }
+
+
+#### is_true()
+# Shorthand for `[is-true()](#is-true)`
+
+( (( $(echo yes | run is_true ; echo $?) == 0 )) && echo is_true succeeded) || { echo is_true failed; status=1; }
+( [[ -z "$(echo yes | run is_true)" ]] && echo is_true succeeded) || { echo is_true failed; status=1; }
+( (( $(echo napkins | run is_true ; echo $?) == 1 )) && echo is_true succeeded) || { echo is_true failed; status=1; }
+( [[ -z "$(echo napkins | run is_true)" ]] && echo is_true succeeded) || { echo is_true failed; status=1; }
+
+
+# Prepends its arguments to each line of input.
+
+# ( [[ $(echo interesting data | run prepend '>> ') == ">> interesting data" ]] && echo prepend succeeded) || { echo prepend failed; status=1; }
+
+
+#### prettycommify()
+# Like `commaspacify()` but with ' and ' between the last two elements.
+
+( [[ $(seq 1 10 | run prettycommify) == '1, 2, 3, 4, 5, 6, 7, 8, 9 and 10' ]] && echo prettycommify succeeded) || { echo prettycommify failed; status=1; }
+
+
+#### quote()
+# Surrounds input lines with ASCII single quote character.
+
+( (( $(seq 1 10 | run quote | wc -l) == 10 )) && echo quote succeeded) || { echo quote failed; status=1; }
+( (( $(seq 1 10 | run quote | egrep "^'([1-9]|10)'$" | wc -l) == 10 )) && echo quote succeeded) || { echo quote failed; status=1; }
+
+
+#### spacify()
+# Collapses the input into a space separated string.
+
+( [[ $(seq 1 10 | run spacify) == "1 2 3 4 5 6 7 8 9 10" ]] && echo spacify succeeded) || { echo spacify failed; status=1; }
+
+
+#### to-lower()
+# Converts `stdin` to lower case and writes to `stdout`.
+
+( [[ $(echo UPPERCASE | run to-lower) == 'uppercase' ]] && echo to-lower succeeded) || { echo to-lower failed; status=1; }
+
+
+#### tolower()
+# Synonym of `[to-lower()](#to-lower)`.
+
+( [[ $(echo UPPERCASE | run tolower) == 'uppercase' ]] && echo tolower succeeded) || { echo tolower failed; status=1; }
+
+
+#### to-upper()
+# Converts `stdin` to upper case and writes to `stdout`.
+
+( [[ $(echo lowercase | run to-upper) == 'LOWERCASE' ]] && echo to-upper succeeded) || { echo to-upper failed; status=1; }
+
+
+#### toupper()
+# Synonym of `[to-upper()](#to-upper)`.
+
+( [[ $(echo lowercase | run toupper) == 'LOWERCASE' ]] && echo toupper succeeded) || { echo toupper failed; status=1; }
+
+
+exit $status
+

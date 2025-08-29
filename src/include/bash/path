@@ -16,17 +16,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-function to-arrays() {
-    local count=${1:-50}
-    local dir="/tmp/${TASK}.$$.${RANDOM}"
-    (
-        trap 's=$?; rm -rf "${dir}"; exit $s' EXIT
-        mkdir "${dir}"
-        builtin cd "${dir}"
-        split -l "${count}"
-        for f in $(ls | grep ^x |sort); do
-            cat "${f}"
-            echo
-        done
-    )
+
+function path-append() {
+    export PATH=$(echo "${PATH}" | __path-element-append "$1")
 }
+
+function path-prepend() {
+    export PATH=$(echo "${PATH}" | __path-element-prepend "$1")
+}
+
+function path-remove() {
+    export PATH=$(echo "${PATH}" | __path-element-remove "$1")
+}
+
+function __path-element-append() {
+    echo $(__path-element-remove "$1"):"${1}"
+}
+
+function __path-element-prepend() {
+    echo "${1}":$(__path-element-remove "$1")
+}
+
+function __path-element-remove() {
+    sed "s|:${1}:|:|g" | sed "s|^${1}:||"  | sed "s|:${1}$||"
+}
+
