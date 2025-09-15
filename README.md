@@ -4,6 +4,7 @@
   - [Synopsis](#synopsis)
   - [Overview](#overview)
   - [Example](#example)
+  - [Building](#building)
 
 ## Synopsis
 
