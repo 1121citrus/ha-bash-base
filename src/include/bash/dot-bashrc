@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# An application specific service to rename Home Assistant backups and copy them off site.
+# Common bash setup.
 # Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,8 @@
 
 whereami=$(dirname $(readlink -f "${BASH_SOURCE}"))
 BASH_FUNCTION_DIR=${BASH_FUNCTION_DIR:-$(cd "${whereami}" && pwd)}
-BIN_DIR=${BIN_DIR:-$(cd "${whereami}/../../bin" && pwd)}
+BIN_DIR=${BIN_DIR:-$(cd "${BASH_FUNCTION_DIR}/../../bin" && pwd)}
 
 source "${COMMON_FUNCTIONS_FILE:-${BASH_FUNCTION_DIR}/common-functions}"
 
 path-prepend "${BIN_DIR}"
-

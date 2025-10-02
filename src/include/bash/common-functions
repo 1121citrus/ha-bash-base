@@ -16,7 +16,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-BASH_FUNCTION_DIR=${BASH_FUNCTION_DIR:-$(dirname $(readlink -f "${BASH_SOURCE}"))}
+whereami=$(dirname $(readlink -f "${BASH_SOURCE}"))
+BASH_FUNCTION_DIR=${BASH_FUNCTION_DIR:-$(cd "${whereami}" && pwd)}
+BIN_DIR=${BIN_DIR:-$(cd "${BASH_FUNCTION_DIR}/../../bin" && pwd)}
 
+source "${BASH_FUNCTION_DIR}/logging"
 source "${BASH_FUNCTION_DIR}/path"
 source "${BASH_FUNCTION_DIR}/text"
+
+path-prepend "${BIN_DIR}"

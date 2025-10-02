@@ -22,4 +22,3 @@ if [[ "${#@}" = "0" ]]; then
 else
     echo "${1}"
 fi | grep -E -i -q '^\s*(1|true|t|yes|y)\s*$' >/dev/null 2>&1
-

@@ -2,7 +2,7 @@
 
 #### Contents
   - [Usage](#usage)
-  - [Commands](#commands)
+  - [Functions](#functions)
       - [debug()](#debug)
         - [Usage](#usage)
         - [Passing a log message argument](#passing-a-log-message-argument)
@@ -36,10 +36,36 @@
 ## Usage
 
 ```bash
-pathprepend /usr/local/1121citrus/bin
+source /usr/local/1121citrus/include/bash/common-functions
 ```
 
-## Commands
+Note that these are Bash  __functions__  and, hence, cannot be `exec`'ed.
+
+```console
+$ docker run -i --rm 1121citrus/ha-bash-base:latest debug message
+/usr/local/bin/docker-entrypoint.sh: line 11: exec: debug: not found
+```
+
+compared to
+
+```console
+docker run -i --rm -e DEBUG=true 1121citrus/ha-bash-base:latest bash -c 'debug message'
+20251002T172747 bash [DEBUG] message
+```
+
+or
+
+```console
+echo debug message | docker run -i --rm 1121citrus/ha-bash-base:latest
+20251002T172206 bash [DEBUG] message
+```
+
+The first form uses the container's `exec` entry point and does not execute under
+a shell so the function is not available. The second and third forms causes the
+`debug` statement to execute within an initialized Bash shell and so the functions
+are available.
+
+## Functions
 
 #### debug()
 

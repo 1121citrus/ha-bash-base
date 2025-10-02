@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Common bash functions.
 # Copyright (C) 2025 James Hanlon [mailto:jim@hanlonsoftware.com]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,14 +16,40 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-set -o errexit -o errtrace -o nounset -o pipefail
+function log() {
+    local severity=${1:?Need severity}
+    shift
+    if [[ -n "${@:-}" ]]; then
+        echo $(date '+%Y%m%dT%H%M%S') $(basename -- "${0}") [${severity}] "${@}" >/dev/stderr
+    else
+        while read line; do
+            echo $(date '+%Y%m%dT%H%M%S') $(basename -- "${0}") [${severity}] ${line} >/dev/stderr
+        done
+    fi
+}
 
-if [[ -n "${TASK_LOGFILE:-}" ]]; then
-    local logdate=$(date -u +%Y%m%dT%H%M%S)
-    local rid=
-    [[ -n "${REQUESTID:-}" ]] && rid="${REQUESTID} ${logdate} "
-    if [[ -n ${1+x} ]]; then echo "$@"; else cat -; fi | while read line ; do
-        echo "${rid}${line}" >> "${TASK_LOGFILE}"
-    done
-fi
+function debug() {
+    log DEBUG "${@:-}"
+}
 
+function error() {
+    log ERROR "${@:-}"
+    exit ${EXIT_CODE:-1}
+}
+
+function ignore() {
+    log IGNORE "${@:-}"
+}
+
+function info() {
+    log INFO "${@:-}"
+}
+
+
+function warn() {
+    (set -o noglob; log WARN "${@:-}")
+}
+
+function warning() {
+    (set -o noglob; warn "${@:-}")
+}

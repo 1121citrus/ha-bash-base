@@ -24,7 +24,7 @@ ENV __1121CITRUS_INCLUDE_BASH_DIR=${__1121CITRUS_BASE_DIR}/include/bash
 ENV BASH=/usr/local/bin/bash
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php python3 py3-pip" \
+RUN APK_PACKAGES="coreutils perl perl-utils" \
     && set -Eeux -o pipefail \
     && echo [INFO] start installing ha-bash-base \
     && echo [INFO] installing apk packages: ${APK_PACKAGES} \
@@ -43,13 +43,9 @@ RUN APK_PACKAGES="aws-cli coreutils perl perl-utils php python3 py3-pip" \
     && echo [INFO] completed installing 1121citrus \
     && true
 
-# Install Docker binary -- borrow it from Official Docker container
-COPY --from=docker:latest --chmod=755 ./usr/local/bin/docker /usr/local/bin/docker
-
 # Install common functions
 COPY --chmod=755 ./src/include/bash/* ${__1121CITRUS_INCLUDE_BASH_DIR}
 COPY --chmod=755 ./src/bin/* ${__1121CITRUS_BIN_DIR}
 
 ENV BASH_ENV=/etc/profile
 WORKDIR /
-
